@@ -1,0 +1,25 @@
+{
+  "name": "spotify-top-charts",
+  "version": "1.0.0",
+  "description": "Simple project to experiment with D3 and visualize Spotify Top Chart Data for 2020 - 2021",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^8.4.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.25.3",
+    "eslint-plugin-prettier": "^4.0.0",
+    "husky": "^7.0.4",
+    "lint-staged": "^12.1.2",
+    "prettier": "^2.5.1"
+  },
+  "hooks": {
+    "pre-commit": "lint-staged"
+  }
+}

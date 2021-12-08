@@ -17,3 +17,32 @@ body {
   -ms-flex-align: center;
   align-items: center;
 }
+
+.button-container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: row;
+  flex-direction: row;
+}
+
+button {
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+  padding: 1rem 1.5rem;
+  border: 2px solid #1db954;
+  background: #191414;
+  border-radius: 0.25rem;
+  color: #ffffff;
+}
+
+button:hover {
+  cursor: pointer;
+  background: rgba(29, 185, 84, 0.3);
+}
+
+.active {
+  background: rgba(29, 185, 84, 0.3);
+}

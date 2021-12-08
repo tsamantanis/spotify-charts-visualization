@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
-// import RadarChart from './radarChart.js'
-import BarChart from './barChart.js'
+import RadarChart from './radarChart.js'
+// import BarChart from './barChart.js'
 import { colors } from './constants.js'
 
 async function handleData() {
@@ -16,11 +16,11 @@ async function handleData() {
 
   const color = d3.scaleOrdinal().range(colors)
 
-  const radarChartOptions = {
+  const chartOptions = {
     w: width,
     h: height,
     margin,
-    maxValue: 1,
+    maxValue: 70,
     levels: 4,
     roundStrokes: true,
     color,
@@ -51,11 +51,11 @@ async function handleData() {
 
   const averageDanceability = data.reduce((acc, cur) => acc + formatValue(cur.danceability), 0) / data.length
   const averageEnergy = data.reduce((acc, cur) => acc + formatValue(cur.energy), 0) / data.length
-  const averageLoudness = data.reduce((acc, cur) => acc + ((formatValue(cur["loudness.db"]) / 14) * 100), 0) / data.length
+  const averageLoudness = data.reduce((acc, cur) => acc + ((formatValue(cur["loudness.dB"]) / 14) * 100), 0) / data.length
   const averageSpeechiness = data.reduce((acc, cur) => acc + formatValue(cur.speechiness), 0) / data.length
   const averageAcousticness = data.reduce((acc, cur) => acc + formatValue(cur.acousticness), 0) / data.length
   const averageLiveness = data.reduce((acc, cur) => acc + formatValue(cur.liveness), 0) / data.length
-  // energy,danceability,loudness.dB,liveness,valance,length,acousticness,speechiness,popularity
+
   const formattedData = [
     [
       { axis: 'Danceability', value: averageDanceability },
@@ -69,8 +69,8 @@ async function handleData() {
 
   // console.log(formattedData)
   // Call function to draw the Radar chart
-  // RadarChart('.radarChart', formattedData, radarChartOptions)
-  BarChart('.barChart', formattedData[0], radarChartOptions)
+  RadarChart('.radarChart', formattedData, chartOptions)
+  // BarChart('.barChart', formattedData[0], chartOptions)
 }
 
 handleData()

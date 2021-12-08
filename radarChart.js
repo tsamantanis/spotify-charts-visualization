@@ -8,7 +8,7 @@ export default function RadarChart(id, data, options) {
     margin: options.margin, // The margins of the SVG
     levels: options.levels, // How many levels or inner circles should there be drawn
     maxValue: options.maxValue, // What is the value that the biggest circle will represent
-    labelFactor: 1.25, // How much farther than the radius of the outer circle should the labels be placed
+    labelFactor: 1.2, // How much farther than the radius of the outer circle should the labels be placed
     wrapWidth: 60, // The number of pixels after which a label needs to be given a new line
     opacityArea: 0.4, // The opacity of the area of the blob
     dotRadius: 4, // The size of the colored circles of each blog
@@ -18,28 +18,12 @@ export default function RadarChart(id, data, options) {
     color: options.color, // Color function
   }
 
-  // Put all of the options into a letiable called cfg
-  // if (typeof options !== 'undefined') {
-  //   for (const i in options) {
-  //     if (typeof options[i] !== 'undefined') {
-  //       cfg[i] = options[i];
-  //     }
-  //   } // for i
-  // } // if
-
-  // If the supplied maxValue is smaller than the actual one, replace by the max in the data
-  // let maxValue = Math.max(cfg.maxValue, d3.max(data, function(i) {
-  //   return d3.max(i.map(function(o) {
-  //     return o.value;
-  //   })
-  //   )})
-  // );
-
+  let wrapcount = 0
   function wrap(text, width) {
     text.each((function () {
       const textLabel = d3.select(this)
-      const words = textLabel.text().split(/\s+/).reverse()
-      let word
+      // const words = textLabel.text().split(/\s+/).reverse()
+      let word = ''
       let line = []
       let lineNumber = 0
       const lineHeight = 1.4 // ems
@@ -48,23 +32,24 @@ export default function RadarChart(id, data, options) {
       const dy = parseFloat(textLabel.attr('dy'))
       let tspan = textLabel.text(null).append('tspan').attr('x', x).attr('y', y)
         .attr('dy', `${dy}em`)
-
-      while (words) {
-        line.push(words.pop())
+      
+      word = axisNames[wrapcount]
+      wrapcount += 1
+      line.push(word)
+      tspan.text(line.join(' '))
+      if (tspan.node().getComputedTextLength() > width) {
+        line.pop()
         tspan.text(line.join(' '))
-        if (tspan.node().getComputedTextLength() > width) {
-          line.pop()
-          tspan.text(line.join(' '))
-          line = [word]
-          lineNumber += 1
-          tspan = text
-            .append('tspan')
-            .attr('x', x)
-            .attr('y', y)
-            .attr('dy', `${lineNumber * lineHeight + dy}em`)
-            .text(word)
-        }
+        line = [word]
+        lineNumber += 1
+        tspan = text
+          .append('tspan')
+          .attr('x', x)
+          .attr('y', y)
+          .attr('dy', `${lineNumber * lineHeight + dy}em`)
+          .text(word)
       }
+      
     }))
   }
 
@@ -83,6 +68,8 @@ export default function RadarChart(id, data, options) {
   const angleSlice = (Math.PI * 2) / total // The width in radians of each "slice"
 
   const rScale = d3.scaleLinear().range([0, radius]).domain([0, cfg.maxValue])
+
+  const backgroundColor = '#191414'
 
   d3.select(id).select('svg').remove()
 
@@ -162,7 +149,7 @@ export default function RadarChart(id, data, options) {
   feMergeShadow.append('feMergeNode').attr('in', 'SourceGraphic')
 
   const axisGrid = g.append('g').attr('class', 'axisWrapper')
-
+  
   axisGrid
     .selectAll('.levels')
     .data(d3.range(1, cfg.levels + 1).reverse())
@@ -170,7 +157,7 @@ export default function RadarChart(id, data, options) {
     .append('circle')
     .attr('class', 'gridCircle')
     .attr('r', (d) => (radius / cfg.levels) * d)
-    .style('fill', '#FFFFFF')
+    .style('fill', backgroundColor)
     .style('fill-opacity', cfg.opacityCircles)
     .style('filter', 'url(#drop-shadow)')
 
@@ -186,9 +173,9 @@ export default function RadarChart(id, data, options) {
     .attr('x1', 0)
     .attr('y1', 0)
     .attr('x2', (d, i) => (
-      rScale(cfg.maxValue * 1.1) * Math.cos(angleSlice * i - Math.PI / 2)))
+      rScale(cfg.maxValue) * Math.cos(angleSlice * i - Math.PI / 2)))
     .attr('y2', (d, i) => (
-      rScale(cfg.maxValue * 1.1) * Math.sin(angleSlice * i - Math.PI / 2)))
+      rScale(cfg.maxValue) * Math.sin(angleSlice * i - Math.PI / 2)))
     .attr('class', 'line')
     .style('stroke', 'white')
     .style('stroke-width', '1px')
@@ -196,27 +183,30 @@ export default function RadarChart(id, data, options) {
   axis
     .append('text')
     .attr('class', 'legend')
-    .style('font-size', '11px')
+    .style('font-size', '14px')
+    .attr('fill', '#ffffff')
     .attr('text-anchor', 'middle')
     .attr('dy', '0.35em')
     .attr(
       'x',
       (d, i) => (
         rScale(cfg.maxValue * cfg.labelFactor) *
-        Math.cos(angleSlice * i - Math.PI / 2))
+        Math.cos(angleSlice * i - (Math.PI / 2))
+      )
     )
     .attr(
       'y',
       (d, i) => (
         rScale(cfg.maxValue * cfg.labelFactor) *
-        Math.sin(angleSlice * i - Math.PI / 2)
+        Math.sin(angleSlice * i - (Math.PI / 2))
       )
     )
-    .text((d) => d)
+    .text(d => d)
     .call(wrap, cfg.wrapWidth)
 
   const radarLine = d3
     .lineRadial()
+    .curve(d3.curveCardinalClosed)
     .radius((d) => rScale(d.value))
     .angle((d, i) => i * angleSlice)
 
@@ -258,6 +248,6 @@ export default function RadarChart(id, data, options) {
       rScale(d.value) * Math.cos(angleSlice * i - Math.PI / 2)))
     .attr('cy', (d, i) => (
       rScale(d.value) * Math.sin(angleSlice * i - Math.PI / 2)))
-    .style('fill', (d, i, j) => cfg.color(j))
+    .style('fill', colors[0])
     .style('fill-opacity', 1)
 } // RadarChart

@@ -18,6 +18,12 @@ body {
   align-items: center;
 }
 
+h1 {
+  color: #fff;
+  margin-top: 2rem;
+  margin-bottom: 4rem;
+}
+
 .button-container {
   display: -webkit-box;
   display: -ms-flexbox;

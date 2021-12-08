@@ -158,8 +158,10 @@ function triggerReload() {
 
   for (let i = 0; i < chartButtons.length; i++) {
     chartButtons[i].classList.remove("active")
+    document.getElementById(chartButtons[i].id + "Chart").classList.remove("active")
     if (selectedChart === chartButtons[i].id) {
       chartButtons[i].classList.add("active")
+      document.getElementById(selectedChart + "Chart").classList.add("active")
     }
   }
 }

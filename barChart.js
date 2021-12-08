@@ -40,7 +40,9 @@ export default function BarChart(id, data, options) {
       .attr("height", cfg.h + cfg.margin.top + cfg.margin.bottom)
     .append("g")
       .attr("transform",
-            "translate(" + cfg.margin.left + "," + cfg.margin.top + ")");
+            "translate(" + cfg.margin.left + "," + cfg.margin.top + ")")
+      .style("color", '#fff');
+
    // Add X axis
    var x = d3.scaleLinear()
    .domain([0, 100])
@@ -51,7 +53,8 @@ export default function BarChart(id, data, options) {
       .call(d3.axisBottom(x))
       .selectAll("text")
         .attr("transform", "translate(-10,0)rotate(-45)")
-        .style("text-anchor", "end");
+        .style("text-anchor", "end")
+        .style("color", '#fff');
 
  // Y axis
  var y = d3.scaleBand()
@@ -70,5 +73,5 @@ export default function BarChart(id, data, options) {
    .attr("y", function(d) { return y(d.axis); })
    .attr("width", function(d) { return x(d.value); })
    .attr("height", y.bandwidth() )
-   .attr("fill", "#69b3a2")
+   .attr("fill", (d, i) => cfg.color(i))
 }

@@ -46,3 +46,12 @@ button:hover {
 .active {
   background: rgba(29, 185, 84, 0.3);
 }
+
+.chart {
+  display: none;
+}
+
+.chart.active {
+  display: block;
+  background: transparent;
+}

@@ -22,6 +22,7 @@ async function handleData(analysis, chartType) {
     margin,
     maxValue: 100,
     levels: 4,
+    opacity: analysis === "top10" ? 0.05 : analysis === "top100" ? 0 : 0.3,
     roundStrokes: true,
     color,
   }

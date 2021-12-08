@@ -7,7 +7,7 @@ export const colors = [
   // '#6930c3',
   // '#7400b8',
   // '#1DB954'
-  '#fff',
+  // '#fff',
   '#cb00d6',
   '#b444f1',
   '#9462ff',
@@ -23,5 +23,5 @@ export const colors = [
   '#00efff',
   '#00f7ff',
   '#00fff7',
-  '#1DB954'
+  // '#1DB954'
 ]

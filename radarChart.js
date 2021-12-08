@@ -3,8 +3,8 @@ import { colors } from './constants.js'
 
 export default function RadarChart(id, data, options) {
   const cfg = {
-    w: options.width, // Width of the circle
-    h: options.height, // Height of the circle
+    w: options.w, // Width of the circle
+    h: options.h, // Height of the circle
     margin: options.margin, // The margins of the SVG
     levels: options.levels, // How many levels or inner circles should there be drawn
     maxValue: options.maxValue, // What is the value that the biggest circle will represent

@@ -1,5 +1,6 @@
 /* eslint-disable no-undef */
-import RadarChart from './radarChart.js'
+// import RadarChart from './radarChart.js'
+import BarChart from './barChart.js'
 import { colors } from './constants.js'
 
 async function handleData() {
@@ -26,14 +27,14 @@ async function handleData() {
   }
 
   function formatValue(value) {
-    return Math.abs(parseFloat(value)) > 1 ? 1 : Math.abs(parseFloat(value)) || 0
+    return Math.abs(parseFloat(value)) > 100 ? 100 : Math.abs(parseFloat(value)) || 0
   }
 
   const data = await d3.csv('./spotify_dataset.csv')
-  // const formattedData = data.map(d => d["Danceability"] ?
+  // const formattedData = data.map(d => d["dancability"] ?
   //   [
-  //     { axis: "Danceability", value: formatValue(d["Danceability"]) || 0 },
-  //     { axis: "Energy", value: formatValue(d["Energy"]) || 0 },
+  //     { axis: "Danceability", value: formatValue(d["dancability"]) || 0 },
+  //     { axis: "Energy", value: formatValue(d["energy"]) || 0 },
   //     { axis: "Loudness", value: formatValue(d["Loudness"]) || 0 },
   //     { axis: "Speechiness", value: formatValue(d["Speechiness"]) || 0 },
   //     { axis: "Acousticness", value: formatValue(d["Acousticness"]) || 0 },
@@ -48,13 +49,13 @@ async function handleData() {
   // const maxAcousticness = Math.max(...formattedData.map(d => d[4].value))
   // const maxLiveness = Math.max(...formattedData.map(d => d[5].value))
 
-  const averageDanceability = data.reduce((acc, cur) => acc + formatValue(cur.Danceability), 0) / data.length
-  const averageEnergy = data.reduce((acc, cur) => acc + formatValue(cur.Energy), 0) / data.length
-  const averageLoudness = data.reduce((acc, cur) => acc + formatValue(cur.Loudness), 0) / data.length
-  const averageSpeechiness = data.reduce((acc, cur) => acc + formatValue(cur.Speechiness), 0) / data.length
-  const averageAcousticness = data.reduce((acc, cur) => acc + formatValue(cur.Acousticness), 0) / data.length
-  const averageLiveness = data.reduce((acc, cur) => acc + formatValue(cur.Liveness), 0) / data.length
-
+  const averageDanceability = data.reduce((acc, cur) => acc + formatValue(cur.danceability), 0) / data.length
+  const averageEnergy = data.reduce((acc, cur) => acc + formatValue(cur.energy), 0) / data.length
+  const averageLoudness = data.reduce((acc, cur) => acc + ((formatValue(cur["loudness.db"]) / 14) * 100), 0) / data.length
+  const averageSpeechiness = data.reduce((acc, cur) => acc + formatValue(cur.speechiness), 0) / data.length
+  const averageAcousticness = data.reduce((acc, cur) => acc + formatValue(cur.acousticness), 0) / data.length
+  const averageLiveness = data.reduce((acc, cur) => acc + formatValue(cur.liveness), 0) / data.length
+  // energy,danceability,loudness.dB,liveness,valance,length,acousticness,speechiness,popularity
   const formattedData = [
     [
       { axis: 'Danceability', value: averageDanceability },
@@ -66,8 +67,10 @@ async function handleData() {
     ],
   ]
 
+  // console.log(formattedData)
   // Call function to draw the Radar chart
-  RadarChart('.radarChart', formattedData, radarChartOptions)
+  // RadarChart('.radarChart', formattedData, radarChartOptions)
+  BarChart('.barChart', formattedData[0], radarChartOptions)
 }
 
 handleData()
